@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "Car.h"
+#include <queue>
 //Degree = 16
 //Maxkeys = 31 (2d-1)
 //Maxchild = 32 (2d)
@@ -51,24 +52,44 @@ public:
     }
 
     void print() {
-        printBTree(root, 1);
-    }
-    void printBTree(BNode* node, int level) {
-        if (node == nullptr) {
+        if (root == nullptr) {
             return;
         }
-        std::cout << "Level " << level << ": ";
-        for (int i = 0; i < node->nkeys; i++) {
-            std::cout << node->keys[i] << " ";
-        }
-        std::cout << "\n";
+        std::queue<BNode*> q;
+        q.push(root);
 
-        if (node->isLeaf == false) {
-            for (int i = 0; i <= node->nkeys; i++) {
-                printBTree(node->children[i], level + 1);
+        int lev = 1;
+
+        while (!q.empty()) {
+            int size = q.size();
+
+
+            for (int i = 0; i < size; i++) {
+                BNode* node = q.front();
+                q.pop();
+
+                std::cout << "Level " << lev << ": ";
+                std::cout << "[";
+                for (int j = 0; j < node->nkeys; j++) {
+                    std::cout << node->keys[j];
+                    if (j < node->nkeys - 1) std::cout << ",";
+                }
+                std::cout << "]\n";
+
+                if (!node->isLeaf) {
+                    for (int j = 0; j <= node->nkeys; j++) {
+                        if (node->children[j] != nullptr) {
+                            q.push(node->children[j]);
+                        }
+                    }
+                }
             }
+
+            std::cout << "\n";
+            lev++;
         }
     }
+
     void insert(int key, Car* car) {
         if (root->nkeys == 31) {
             BNode* newRoot = new BNode(false);
