@@ -41,27 +41,39 @@ public:
     }
 
     void print() {
-        if (root == nullptr){return;}
+        if (root == nullptr) {
+            return;
+        }
 
         std::queue<RBNode*> q;
         q.push(root);
 
-        int lev = 0;
+        int lev = 1;
 
         while (!q.empty()) {
             int size = q.size();
-            std::cout << "Level " << lev << ": ";
 
             for (int i = 0; i < size; i++) {
                 RBNode* node = q.front();
                 q.pop();
 
+                std::cout << "Level " << lev << ": ";
                 std::cout << node->val;
-                std::cout << (node->isBlack ? "(B)" : "(R)") << " ";
+
+                if (node->isBlack) {
+                    std::cout << "(B)\n";
+                }
+                else {
+                    std::cout << "(R)\n";
+                }
 
 
-                if (node->left) q.push(node->left);
-                if (node->right) q.push(node->right);
+                if (node->left) {
+                    q.push(node->left);
+                }
+                if (node->right) {
+                    q.push(node->right);
+                }
             }
 
             std::cout << "\n";
